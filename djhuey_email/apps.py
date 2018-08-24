@@ -8,7 +8,7 @@ class HueyEmailAppConfig(apps.AppConfig):
     HUEY_EMAIL_BACKEND = getattr(settings, 'HUEY_EMAIL_BACKEND',
                                  'django.core.mail.backends.smtp.EmailBackend')
     HUEY_EMAIL_MESSAGE_EXTRA_ATTRIBUTES = getattr(settings, 'HUEY_EMAIL_MESSAGE_EXTRA_ATTRIBUTES', None)
-    HUEY_EMAIL_CHUNK_SIZE = getattr(settings, 'HUEY_EMAIL_CHUNK_SIZE', 1024)
+    HUEY_EMAIL_CHUNK_SIZE = getattr(settings, 'HUEY_EMAIL_CHUNK_SIZE', 5)
 
     name = 'djhuey_email'
 
