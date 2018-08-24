@@ -43,13 +43,13 @@ There are some default settings. Unless you specify otherwise, the equivalent of
 following settings will apply::
 
     HUEY_EMAIL_TASK_CONFIG = {
-        'name': 'djhuey_email_send',
-        'ignore_result': True,
+        'retries': 3,
+        'retry_delay': 60 * 5  # 5min
     }
 
 After this setup is complete, and you have a working Huey install, sending
 email will work exactly like it did before, except that the sending will be
-handled by your Celery workers::
+handled by your Huey workers::
 
     from django.core import mail
 
@@ -59,21 +59,17 @@ handled by your Celery workers::
     )
     results = mail.send_mass_mail(emails)
 
-``results`` will be a list of celery `AsyncResult`_ objects that you may ignore, or use to check the
-status of the email delivery task, or even wait for it to complete if want. You have to enable a result
-backend and set ``ignore_result`` to ``False`` in ``HUEY_EMAIL_TASK_CONFIG`` if you want to use these.
+``results`` will be a list of huey `TaskResultWrapper`_ objects that you may ignore, or use to check the
+status of the email delivery task, or even wait for it to complete if want.
 You should also set ``HUEY_EMAIL_CHUNK_SIZE = 1`` in settings if you are concerned about task status
 and results.
 
-See the `Celery docs`_ for more info.
+See the `Huey docs`_ for more info.
 
 
-``len(results)`` will be the number of emails you attempted to send divided by CELERY_EMAIL_CHUNK_SIZE, and is in no way a reflection on the success or failure
+``len(results)`` will be the number of emails you attempted to send divided by HUEY_EMAIL_CHUNK_SIZE, and is in no way a reflection on the success or failure
 of their delivery.
 
-.. _`Celery Task`: http://celery.readthedocs.org/en/latest/userguide/tasks.html#basics
-.. _`Celery docs`: http://celery.readthedocs.org/en/latest/userguide/tasks.html#task-states
-.. _`AsyncResult`: http://celery.readthedocs.org/en/latest/reference/celery.result.html#celery.result.AsyncResult
 
 Changelog
 =========
