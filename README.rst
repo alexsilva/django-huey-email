@@ -7,7 +7,7 @@ A `Django`_ email backend that uses a `Huey`_ queue for out-of-band sending
 of the messages.
 
 .. _`Huey`: https://huey.readthedocs.io/en/latest/index.html
-.. _`Django`: http://www.djangoproject.org/
+.. _`Django`: https://www.djangoproject.com/
 
 .. warning::
 
