@@ -4,10 +4,13 @@ django-huey-email - A Huey-backed Django Email Backend
 
 
 A `Django`_ email backend that uses a `Huey`_ queue for out-of-band sending
-of the messages.
+of the messages. Inspired by the project `django-celery-email`_.
 
 .. _`Huey`: https://huey.readthedocs.io/en/latest/index.html
+.. _`Huey docs`: https://huey.readthedocs.io/en/latest/index.html
 .. _`Django`: https://www.djangoproject.com/
+.. _`django-celery-email`: https://github.com/pmclanahan/django-celery-email
+.. _`TaskResultWrapper`: https://huey.readthedocs.io/en/latest/api.html?highlight=TaskResultWrapper#TaskResultWrapper
 
 .. warning::
 
