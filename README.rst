@@ -7,10 +7,8 @@ A `Django`_ email backend that uses a `Huey`_ queue for out-of-band sending
 of the messages. Inspired by the project `django-celery-email`_.
 
 .. _`Huey`: https://huey.readthedocs.io/en/latest/index.html
-.. _`Huey docs`: https://huey.readthedocs.io/en/latest/index.html
 .. _`Django`: https://www.djangoproject.com/
 .. _`django-celery-email`: https://github.com/pmclanahan/django-celery-email
-.. _`TaskResultWrapper`: https://huey.readthedocs.io/en/latest/api.html?highlight=TaskResultWrapper#TaskResultWrapper
 
 .. warning::
 
@@ -69,10 +67,11 @@ and results.
 
 See the `Huey docs`_ for more info.
 
-
 ``len(results)`` will be the number of emails you attempted to send divided by HUEY_EMAIL_CHUNK_SIZE, and is in no way a reflection on the success or failure
 of their delivery.
 
+.. _`TaskResultWrapper`: https://huey.readthedocs.io/en/latest/api.html?highlight=TaskResultWrapper#TaskResultWrapper
+.. _`Huey docs`: https://huey.readthedocs.io/en/latest/index.html
 
 Changelog
 =========
