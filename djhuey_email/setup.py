@@ -14,7 +14,6 @@ about = {}
 with open(os.path.join(base_dir, 'djhuey_email', '__about__.py')) as f:
     exec(f.read(), about)
 
-
 setup(
     name=about['__title__'],
     version=about['__version__'],
