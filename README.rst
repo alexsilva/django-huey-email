@@ -16,7 +16,7 @@ of the messages. Inspired by the project `django-celery-email`_.
 
 	* Python >= 3.0
 	* Django 2.0.8
-	* Huey += 1.10.2
+	* Huey >= 1.10.2
 
 Using django-huey-email
 =========================
