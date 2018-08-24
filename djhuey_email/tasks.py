@@ -1,16 +1,18 @@
 import sys
 
-from django.conf import settings
+from django.apps import apps
 from django.core.mail import EmailMessage, get_connection
 from huey.contrib.djhuey import task
 
 from .utils import dict_to_email, email_to_dict
 
+config = apps.get_app_config("djhuey_email")
+
 TASK_CONFIG = {
     'retries': 3,
     'retry_delay': 60 * 5  # 5min
 }
-TASK_CONFIG.update(settings.HUEY_EMAIL_TASK_CONFIG)
+TASK_CONFIG.update(config.HUEY_EMAIL_TASK_CONFIG)
 
 
 @task(**TASK_CONFIG)
@@ -28,12 +30,12 @@ def send_emails(messages, backend_kwargs=None, **kwargs):
     # make sure they're all dicts
     messages = [email_to_dict(m) for m in messages]
 
-    conn = get_connection(backend=settings.HUEY_EMAIL_BACKEND, **backend_kwargs)
+    conn = get_connection(backend=config.HUEY_EMAIL_BACKEND, **backend_kwargs)
 
     try:
         conn.open()
     except Exception:
-        sys.stderr.write("Cannot reach HUEY_EMAIL_BACKEND %s", settings.HUEY_EMAIL_BACKEND)
+        sys.stderr.write("Cannot reach HUEY_EMAIL_BACKEND %s", config.HUEY_EMAIL_BACKEND)
         raise
 
     messages_sent = 0

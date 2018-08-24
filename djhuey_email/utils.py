@@ -2,8 +2,10 @@ import base64
 import copy
 from email.mime.base import MIMEBase
 
-from django.conf import settings
+from django.apps import apps
 from django.core.mail import EmailMultiAlternatives, EmailMessage
+
+config = apps.get_app_config('djhuey_email')
 
 
 def chunked(iterator, chunksize):
@@ -60,8 +62,8 @@ def email_to_dict(message):
         contents = base64.b64encode(binary_contents).decode('ascii')
         message_dict['attachments'].append((filename, contents, mimetype))
 
-    if settings.HUEY_EMAIL_MESSAGE_EXTRA_ATTRIBUTES:
-        for attr in settings.HUEY_EMAIL_MESSAGE_EXTRA_ATTRIBUTES:
+    if config.HUEY_EMAIL_MESSAGE_EXTRA_ATTRIBUTES:
+        for attr in config.HUEY_EMAIL_MESSAGE_EXTRA_ATTRIBUTES:
             if hasattr(message, attr):
                 message_dict[attr] = getattr(message, attr)
 
@@ -71,8 +73,8 @@ def email_to_dict(message):
 def dict_to_email(messagedict):
     messagedict = copy.deepcopy(messagedict)
     extra_attrs = {}
-    if settings.HUEY_EMAIL_MESSAGE_EXTRA_ATTRIBUTES:
-        for attr in settings.HUEY_EMAIL_MESSAGE_EXTRA_ATTRIBUTES:
+    if config.HUEY_EMAIL_MESSAGE_EXTRA_ATTRIBUTES:
+        for attr in config.HUEY_EMAIL_MESSAGE_EXTRA_ATTRIBUTES:
             if attr in messagedict:
                 extra_attrs[attr] = messagedict.pop(attr)
     attachments = messagedict.pop('attachments')
