@@ -35,7 +35,7 @@ def send_emails(messages, backend_kwargs=None, **kwargs):
     try:
         conn.open()
     except Exception:
-        sys.stderr.write("Cannot reach HUEY_EMAIL_BACKEND %s", config.HUEY_EMAIL_BACKEND)
+        sys.stderr.write("Cannot reach HUEY_EMAIL_BACKEND {0.HUEY_EMAIL_BACKEND!s}\n".format(config))
         raise
 
     messages_sent = 0
@@ -45,12 +45,12 @@ def send_emails(messages, backend_kwargs=None, **kwargs):
             sent = conn.send_messages([dict_to_email(message)])
             if sent is not None:
                 messages_sent += sent
-
-            sys.stdout.write("Successfully sent email message to %r.", message['to'])
-        except Exception as e:
+            sys.stdout.write("Successfully sent email message to {0[to]!r}.\n".format(message))
+        except Exception as exc:
             # Not expecting any specific kind of exception here because it
             # could be any number of things, depending on the backend
-            sys.stdout.write("Failed to send email message to %r, retrying. (%r)")
+            sys.stdout.write("Failed to send email message to {0[to]!r}, retrying. ({1!r})\n".format(message, exc))
+            raise
 
     conn.close()
     return messages_sent
