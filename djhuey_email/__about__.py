@@ -13,4 +13,4 @@ __author__ = 'Alex Sandro'
 __email__ = 'alex@fabricadigital.com.br'
 
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2015 {0}'.format(__author__)
+__copyright__ = 'Copyright 2018 {0}'.format(__author__)

@@ -24,7 +24,7 @@ setup(
     author=about['__author__'],
     author_email=about['__email__'],
     platforms=['any'],
-    # packages=find_packages(exclude=['ez_setup', 'tests']),
+    packages=['djhuey_email'],
     scripts=[],
     zip_safe=False,
     install_requires=[
