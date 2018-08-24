@@ -15,7 +15,7 @@ of the messages.
 
 	* Python >= 3.0
 	* Django 2.0.8
-	* Celery += 1.10.2
+	* Huey += 1.10.2
 
 Using django-huey-email
 =========================
