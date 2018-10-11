@@ -41,21 +41,21 @@ def send_emails(messages, backend_kwargs=None, **kwargs):
         raise
 
     messages_sent = 0
-
-    for message in messages:
-        try:
-            sent = conn.send_messages([dict_to_email(message)])
-            if sent is not None:
-                messages_sent += sent
-            sys.stdout.write("Successfully sent email message to {0[to]!r}.\n".format(message))
-        except Exception as exc:
-            # Not expecting any specific kind of exception here because it
-            # could be any number of things, depending on the backend
-            sys.stdout.write("Failed to send email message to {0[to]!r}, retrying. ({1!r})\n".format(message, exc))
-            if retries > 0:
-                kwargs['retries'] -= 1
-                send_emails([message], backend_kwargs=backend_kwargs, **kwargs)
-
-    conn.close()
+    try:
+        for message in messages:
+            try:
+                sent = conn.send_messages([dict_to_email(message)])
+                if sent is not None:
+                    messages_sent += sent
+                sys.stdout.write("Successfully sent email message to {0[to]!r}.\n".format(message))
+            except Exception as exc:
+                # Not expecting any specific kind of exception here because it
+                # could be any number of things, depending on the backend
+                sys.stdout.write("Failed to send email message to {0[to]!r}, retrying. ({1!r})\n".format(message, exc))
+                if retries > 0:
+                    kwargs['retries'] -= 1
+                    send_emails([message], backend_kwargs=backend_kwargs, **kwargs)
+    finally:
+        conn.close()
 
     return messages_sent
