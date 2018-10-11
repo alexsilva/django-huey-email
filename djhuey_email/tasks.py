@@ -27,6 +27,8 @@ def send_emails(messages, backend_kwargs=None, **kwargs):
     if isinstance(messages, (EmailMessage, dict)):
         messages = [messages]
 
+    retries = kwargs.setdefault("retries", TASK_CONFIG['retries'] - 1)
+
     # make sure they're all dicts
     messages = [email_to_dict(m) for m in messages]
 
@@ -50,7 +52,10 @@ def send_emails(messages, backend_kwargs=None, **kwargs):
             # Not expecting any specific kind of exception here because it
             # could be any number of things, depending on the backend
             sys.stdout.write("Failed to send email message to {0[to]!r}, retrying. ({1!r})\n".format(message, exc))
-            raise
+            if retries > 0:
+                kwargs['retries'] -= 1
+                send_emails([message], backend_kwargs=backend_kwargs, **kwargs)
 
     conn.close()
+
     return messages_sent
