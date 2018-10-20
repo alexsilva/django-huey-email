@@ -1,4 +1,5 @@
 import sys
+import time
 
 from django.apps import apps
 from django.core.mail import EmailMessage, get_connection
@@ -12,10 +13,9 @@ TASK_CONFIG = {
     'retries': 3,
     'retry_delay': 60 * 5  # 5min
 }
-TASK_CONFIG.update(config.HUEY_EMAIL_TASK_CONFIG)
 
 
-@task(**TASK_CONFIG)
+@task()
 def send_emails(messages, backend_kwargs=None, **kwargs):
     # backward compat: handle **kwargs and missing backend_kwargs
     combined_kwargs = {}
@@ -27,7 +27,11 @@ def send_emails(messages, backend_kwargs=None, **kwargs):
     if isinstance(messages, (EmailMessage, dict)):
         messages = [messages]
 
-    retries = kwargs.setdefault("retries", TASK_CONFIG['retries'] - 1)
+    retries = kwargs.setdefault("retries", TASK_CONFIG['retries'])
+
+    if retries < TASK_CONFIG['retries']:
+        sys.stdout.write("Waiting retry delay...")
+        time.sleep(TASK_CONFIG['retry_delay'])
 
     # make sure they're all dicts
     messages = [email_to_dict(m) for m in messages]
@@ -38,7 +42,6 @@ def send_emails(messages, backend_kwargs=None, **kwargs):
         conn.open()
     except Exception:
         sys.stderr.write("Cannot reach HUEY_EMAIL_BACKEND {0.HUEY_EMAIL_BACKEND!s}\n".format(config))
-        raise
 
     messages_sent = 0
     try:
@@ -55,8 +58,7 @@ def send_emails(messages, backend_kwargs=None, **kwargs):
                 if retries > 0:
                     new_kwargs = kwargs.copy()
                     new_kwargs['retries'] -= 1
-                    send_emails([message], backend_kwargs=backend_kwargs,
-                                **new_kwargs)
+                    send_emails([message], backend_kwargs=combined_kwargs, **new_kwargs)
     finally:
         conn.close()
 
